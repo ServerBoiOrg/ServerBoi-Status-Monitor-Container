@@ -12,6 +12,6 @@ jobs:
       run: |
         echo $PAT_TOKEN | docker login ghcr.io -u serverboiorg --password-stdin
         docker build --tag ghcr.io/serverboiorg/status-monitor:dev .
-        docker push ghcr.io/serverboiorg/status-monitor:dev
+        docker push ghcr.io/serverboiorg/status-monitor:latest
       env:
         PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
