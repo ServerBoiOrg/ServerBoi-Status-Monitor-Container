@@ -138,7 +138,7 @@ func getConfig() *Config {
 	}
 
 	return &Config{
-		"sea-1.us.uncletopia.com",
+		getIP(),
 		os.Getenv("PORT"),
 		os.Getenv("QUERY_METHOD"),
 	}
