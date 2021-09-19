@@ -3,9 +3,8 @@ name: publish
 on: [push]
 
 jobs:
-  publish-workflow-tracking:
+  publish-status-monitoring:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Push to DockerHub

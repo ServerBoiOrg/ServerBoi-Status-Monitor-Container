@@ -19,6 +19,7 @@ import (
 var statusFile = "server_status.json"
 
 func main() {
+	log.Printf("Starting")
 	info, players := waitForClientStart()
 	writeServerInfo(info, players)
 
@@ -41,6 +42,7 @@ func continouslyUpdateStatus() {
 }
 
 func waitForClientStart() (a2sInfo *a2s.ServerInfo, a2sPlayers *a2s.PlayerInfo) {
+	log.Printf("Waiting for client to start")
 	serverConfig := getConfig()
 	address := fmt.Sprintf("%v:%v", serverConfig.IP, serverConfig.Port)
 
@@ -53,7 +55,8 @@ func waitForClientStart() (a2sInfo *a2s.ServerInfo, a2sPlayers *a2s.PlayerInfo) 
 				log.Printf("Client started")
 				break
 			} else {
-				fmt.Printf("bad")
+				fmt.Printf("No response")
+				time.Sleep(time.Duration(30) * time.Second)
 			}
 		}
 	}
@@ -82,16 +85,19 @@ type ServerInfo struct {
 }
 
 func writeServerInfo(info *a2s.ServerInfo, players *a2s.PlayerInfo) {
+	log.Printf("Writing server information")
 	config := getConfig()
 	port, _ := strconv.Atoi(config.Port)
 
 	var playerInfo []*Player
-	for _, player := range players.Players {
-		newPlayer := &Player{
-			Name:     player.Name,
-			Duration: player.Duration,
+	if players != nil {
+		for _, player := range players.Players {
+			newPlayer := &Player{
+				Name:     player.Name,
+				Duration: player.Duration,
+			}
+			playerInfo = append(playerInfo, newPlayer)
 		}
-		playerInfo = append(playerInfo, newPlayer)
 	}
 
 	serverInfo := ServerInfo{
