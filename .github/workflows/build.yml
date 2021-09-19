@@ -10,9 +10,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Push to GHCR
       run: |
-        echo $PAT_TOKEN | docker login ghcr.io -u serverboiorg --password-stdin
-        docker build --tag ghcr.io/serverboiorg/status-monitor:latest .
-        docker push ghcr.io/serverboiorg/status-monitor:latest
+        echo $PAT_TOKEN | docker login ghcr.io -u awlsring --password-stdin
+        docker build --tag ghcr.io/serverboiorg/status-monitor:amd64-latest .
+        docker push ghcr.io/serverboiorg/status-monitor:amd64-latest
     - name: Push to DockerHub
       run: |
         echo $HUB | docker login -u serverboi --password-stdin
