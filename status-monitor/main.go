@@ -41,7 +41,9 @@ func waitForClientStart() (a2sInfo *a2s.ServerInfo, a2sPlayers *a2s.PlayerInfo) 
 				a2sPlayers = players
 				break
 			} else {
-
+				log.Printf("Error getting info. Info: %v | Players: %v", info, players)
+				log.Printf("Waiting 30 seconds before retry.")
+				time.Sleep(time.Duration(30) * time.Second)
 			}
 		} else {
 			log.Printf("No response, trying again in 30 seconds")
