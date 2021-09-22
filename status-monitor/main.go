@@ -118,13 +118,22 @@ func writeServerInfo(info *a2s.ServerInfo, players *a2s.PlayerInfo) {
 }
 
 func a2sQuery(address string) (info *a2s.ServerInfo, players *a2s.PlayerInfo, err error) {
+	log.Printf("Creatieg client on address %v", address)
 	client, err := a2s.NewClient(address)
 	if err == nil {
 		defer client.Close()
-		info, _ = client.QueryInfo()
-		players, _ = client.QueryPlayer()
+		info, err = client.QueryInfo()
+		if err != nil {
+			log.Printf("Error querying info: %v", err)
+		}
+		players, err = client.QueryPlayer()
+		if err != nil {
+			log.Printf("Error querying players: %v", err)
+		}
 		client.Close()
 		return info, players, nil
+	} else {
+		log.Printf("Error creating client. Error: %v", err)
+		return info, players, err
 	}
-	return info, players, err
 }
