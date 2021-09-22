@@ -3,20 +3,19 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
-	"net/http"
-	"os"
 	"strconv"
-	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/rumblefrog/go-a2s"
 )
 
-var statusFile = "server_status.json"
+var (
+	statusFile = "server_status.json"
+	config     = getConfig()
+	address    = fmt.Sprintf("%v:%v", config.IP, config.Port)
+)
 
 func main() {
 	log.Printf("Starting")
@@ -29,38 +28,37 @@ func main() {
 	router.Run(":7032")
 }
 
+func waitForClientStart() (a2sInfo *a2s.ServerInfo, a2sPlayers *a2s.PlayerInfo) {
+	log.Printf("Waiting for client to start")
+
+	for {
+		log.Printf("Querying address %v", address)
+		info, players, err := a2sQuery(address)
+		if err == nil {
+			if info != nil {
+				log.Printf("Client started")
+				a2sInfo = info
+				a2sPlayers = players
+				break
+			} else {
+
+			}
+		} else {
+			log.Printf("No response, trying again in 30 seconds")
+			time.Sleep(time.Duration(30) * time.Second)
+		}
+	}
+	return a2sInfo, a2sPlayers
+}
+
 func continouslyUpdateStatus() {
 	for {
 		log.Printf("Updating server status")
-		serverConfig := getConfig()
-		address := fmt.Sprintf("%v:%v", serverConfig.IP, serverConfig.Port)
-
+		address := fmt.Sprintf("%v:%v", config.IP, config.Port)
 		info, players, _ := a2sQuery(address)
 		writeServerInfo(info, players)
 		time.Sleep(time.Duration(30) * time.Second)
 	}
-}
-
-func waitForClientStart() (a2sInfo *a2s.ServerInfo, a2sPlayers *a2s.PlayerInfo) {
-	log.Printf("Waiting for client to start")
-	serverConfig := getConfig()
-	address := fmt.Sprintf("%v:%v", serverConfig.IP, serverConfig.Port)
-
-	for {
-		info, players, err := a2sQuery(address)
-		if err == nil {
-			if info != nil {
-				a2sInfo = info
-				a2sPlayers = players
-				log.Printf("Client started")
-				break
-			} else {
-				fmt.Printf("No response")
-				time.Sleep(time.Duration(30) * time.Second)
-			}
-		}
-	}
-	return a2sInfo, a2sPlayers
 }
 
 type Player struct {
@@ -86,9 +84,7 @@ type ServerInfo struct {
 
 func writeServerInfo(info *a2s.ServerInfo, players *a2s.PlayerInfo) {
 	log.Printf("Writing server information")
-	config := getConfig()
 	port, _ := strconv.Atoi(config.Port)
-
 	var playerInfo []*Player
 	if players != nil {
 		for _, player := range players.Players {
@@ -129,34 +125,4 @@ func a2sQuery(address string) (info *a2s.ServerInfo, players *a2s.PlayerInfo, er
 		return info, players, nil
 	}
 	return info, players, err
-}
-
-type Config struct {
-	IP          string
-	Port        string
-	QueryMethod string
-}
-
-func getConfig() *Config {
-	env := godotenv.Load(".env")
-	if env == nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	return &Config{
-		getIP(),
-		os.Getenv("PORT"),
-		os.Getenv("QUERY_METHOD"),
-	}
-}
-
-func getIP() string {
-	resp, err := http.Get("http://checkip.amazonaws.com")
-	if err == nil {
-		defer resp.Body.Close()
-		b, _ := io.ReadAll(resp.Body)
-		return strings.TrimSpace(string(b))
-	} else {
-		return ""
-	}
 }
