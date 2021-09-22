@@ -14,7 +14,7 @@ import (
 var (
 	statusFile = "server_status.json"
 	config     = getConfig()
-	address    = fmt.Sprintf("%v:%v", config.IP, config.Port)
+	address    = fmt.Sprintf("%v:%v", "application", config.Port)
 )
 
 func main() {
@@ -33,7 +33,7 @@ func waitForClientStart() (a2sInfo *a2s.ServerInfo, a2sPlayers *a2s.PlayerInfo) 
 
 	for {
 		log.Printf("Querying address %v", address)
-		info, players, err := a2sQuery(address)
+		info, players, err := a2sQuery()
 		if err == nil {
 			if info != nil {
 				log.Printf("Client started")
@@ -56,8 +56,7 @@ func waitForClientStart() (a2sInfo *a2s.ServerInfo, a2sPlayers *a2s.PlayerInfo) 
 func continouslyUpdateStatus() {
 	for {
 		log.Printf("Updating server status")
-		address := fmt.Sprintf("%v:%v", config.IP, config.Port)
-		info, players, _ := a2sQuery(address)
+		info, players, _ := a2sQuery()
 		writeServerInfo(info, players)
 		time.Sleep(time.Duration(30) * time.Second)
 	}
@@ -117,8 +116,8 @@ func writeServerInfo(info *a2s.ServerInfo, players *a2s.PlayerInfo) {
 	_ = ioutil.WriteFile(statusFile, file, 0644)
 }
 
-func a2sQuery(address string) (info *a2s.ServerInfo, players *a2s.PlayerInfo, err error) {
-	log.Printf("Creatieg client on address %v", address)
+func a2sQuery() (info *a2s.ServerInfo, players *a2s.PlayerInfo, err error) {
+	log.Printf("Creating client on address %v", address)
 	client, err := a2s.NewClient(address)
 	if err == nil {
 		defer client.Close()
