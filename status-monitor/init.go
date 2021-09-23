@@ -25,7 +25,7 @@ type Config struct {
 	HostOS       string
 	Architecture string
 	Provider     string
-	InstanceType string
+	HardwareType string
 	Region       string
 }
 
@@ -63,7 +63,7 @@ func getConfig() *Config {
 		HostOS:       os.Getenv("HOST_OS"),
 		Architecture: os.Getenv("ARCHITECTURE"),
 		Provider:     os.Getenv("PROVIDER"),
-		InstanceType: os.Getenv("INSTANCE_TYPE"),
+		HardwareType: os.Getenv("HARDWARE_TYPE"),
 		Region:       os.Getenv("REGION"),
 	}
 }

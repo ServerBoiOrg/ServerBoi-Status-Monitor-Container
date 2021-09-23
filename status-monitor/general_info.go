@@ -31,7 +31,7 @@ type GeneralInformation struct {
 
 type ServiceInformation struct {
 	Provider     string `json:"Provider"`
-	InstanceType string `json:"InstanceType"`
+	HardwareType string `json:"Hardware-Type"`
 	Region       string `json:"Region"`
 }
 
@@ -55,7 +55,7 @@ func getGeneralInfo() *GeneralInformation {
 func getServiceInfo() *ServiceInformation {
 	return &ServiceInformation{
 		Provider:     config.Provider,
-		InstanceType: config.InstanceType,
+		HardwareType: config.HardwareType,
 		Region:       config.Region,
 	}
 }

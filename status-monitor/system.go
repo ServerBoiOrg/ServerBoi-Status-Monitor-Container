@@ -25,7 +25,6 @@ type MemoryInformation struct {
 }
 
 type DiskInformation struct {
-	Fstype      string  `json:"File-System"`
 	Total       uint64  `json:"total"`
 	Free        uint64  `json:"Free"`
 	Used        uint64  `json:"Used"`
@@ -36,12 +35,10 @@ type CPUInformation struct {
 	CPU       int32   `json:"Cpu"`
 	Vendor    string  `json:"Vendor"`
 	Family    string  `json:"Family"`
-	Model     string  `json:"Model"`
-	CoreID    string  `json:"Core-ID"`
-	Cores     int32   `json:"Cores"`
+	Cores     int32   `json:"Core(s)"`
 	ModelName string  `json:"Model-Name"`
 	Mhz       float64 `json:"Mhz"`
-	CacheSize int32   `json:"Cache=Size"`
+	CacheSize int32   `json:"Cache-Size"`
 }
 
 func getSystemInfo() *SystemInformation {
@@ -69,10 +66,8 @@ func getCpuInfo() []*CPUInformation {
 			CPU:       e.CPU,
 			Vendor:    e.VendorID,
 			Family:    e.Family,
-			Model:     e.Model,
 			ModelName: e.ModelName,
 			Mhz:       e.Mhz,
-			CoreID:    e.CoreID,
 			Cores:     e.Cores,
 			CacheSize: e.CacheSize,
 		}
@@ -88,13 +83,13 @@ func getMemoryInfo() *MemoryInformation {
 		Available:   v.Available,
 		Used:        v.Used,
 		UsedPercent: v.UsedPercent,
+		Free:        v.Free,
 	}
 }
 
 func getDiskInfo() *DiskInformation {
 	d, _ := disk.Usage("/")
 	return &DiskInformation{
-		Fstype:      d.Fstype,
 		Total:       d.Total,
 		Free:        d.Free,
 		Used:        d.Used,
