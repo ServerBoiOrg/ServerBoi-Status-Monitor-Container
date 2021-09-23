@@ -5,15 +5,28 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	IP          string
-	Port        string
-	QueryMethod string
+	IP           string
+	Created      string
+	ClientPort   int
+	QueryPort    int
+	QueryType    string
+	Application  string
+	Name         string
+	ID           string
+	OwnerID      string
+	OwnerName    string
+	HostOS       string
+	Architecture string
+	Provider     string
+	InstanceType string
+	Region       string
 }
 
 func getIP() string {
@@ -33,9 +46,24 @@ func getConfig() *Config {
 		log.Fatalf("Error loading .env file")
 	}
 
+	clientPort, _ := strconv.Atoi(os.Getenv("CLIENT_PORT"))
+	queryPort, _ := strconv.Atoi(os.Getenv("QUERY_PORT"))
+
 	return &Config{
-		getIP(),
-		os.Getenv("PORT"),
-		os.Getenv("QUERY_METHOD"),
+		IP:           getIP(),
+		Created:      os.Getenv("CREATED"),
+		ClientPort:   clientPort,
+		QueryPort:    queryPort,
+		QueryType:    os.Getenv("QUERY_TYPE"),
+		Application:  os.Getenv("APPLICATION"),
+		Name:         os.Getenv("NAME"),
+		ID:           os.Getenv("ID"),
+		OwnerID:      os.Getenv("OWNER_ID"),
+		OwnerName:    os.Getenv("OWNER_NAME"),
+		HostOS:       os.Getenv("HOST_OS"),
+		Architecture: os.Getenv("ARCHITECTURE"),
+		Provider:     os.Getenv("PROVIDER"),
+		InstanceType: os.Getenv("INSTANCE_TYPE"),
+		Region:       os.Getenv("REGION"),
 	}
 }
