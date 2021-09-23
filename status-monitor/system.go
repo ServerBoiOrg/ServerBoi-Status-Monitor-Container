@@ -11,8 +11,8 @@ import (
 
 type SystemInformation struct {
 	Uptime string             `json:"Uptime"`
-	CPU    []*CPUInformation  `json"CPU"`
-	Memory *MemoryInformation `json"Memory"`
+	CPU    []*CPUInformation  `json:"CPUs"`
+	Memory *MemoryInformation `json:"Memory"`
 	Disk   *DiskInformation   `json:"Disk"`
 }
 

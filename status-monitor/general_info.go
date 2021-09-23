@@ -22,7 +22,7 @@ type GeneralInformation struct {
 	ID          string `json:"ID"`
 	OwnerID     string `json:"Owner-ID"`
 	OwnerName   string `json:"Owner-Name"`
-	ClientPort  int    `json:"Client-Port`
+	ClientPort  int    `json:"Client-Port"`
 	QueryPort   int    `json:"Query-Port,omitempty"`
 	QueryType   string `json:"Query-Type,omityempty"`
 	IP          string `json:"IP"`
