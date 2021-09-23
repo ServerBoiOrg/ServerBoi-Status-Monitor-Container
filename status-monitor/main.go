@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	statusFile = "server_status.json"
-	config     *Config
+	statusFile    = "server_status.json"
+	config        *Config
+	applicationUp bool
 )
 
 func init() {

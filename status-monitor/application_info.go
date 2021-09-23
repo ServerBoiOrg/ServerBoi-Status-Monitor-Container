@@ -59,6 +59,9 @@ func a2sInfo() *ApplicationInformation {
 			appInfo.PasswordProtected = info.Visibility
 			appInfo.MaxPlayers = int(info.MaxPlayers)
 			appInfo.VAC = info.VAC
+
+			// Really lazy, do this better later
+			applicationUp = true
 		}
 		if players != nil {
 			var playerInfo []*Player

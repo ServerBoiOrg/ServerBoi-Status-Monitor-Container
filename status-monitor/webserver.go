@@ -12,7 +12,7 @@ func configureRouter() *gin.Engine {
 	router := gin.Default()
 	router.GET("/status", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"Running": true,
+			"Running": applicationUp,
 		})
 	})
 	router.GET("/info", getInfo)
