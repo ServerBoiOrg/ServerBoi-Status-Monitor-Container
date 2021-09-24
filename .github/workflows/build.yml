@@ -20,6 +20,5 @@ jobs:
           --push \
           --platform linux/arm64/v8,linux/amd64 \
           --tag serverboi/status-monitor:latest . 
-        docker push serverboi/status-monitor:latest
       env:
         HUB: ${{ secrets.HUB }}
