@@ -7,11 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Push to DockerHub
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: crazy-max/ghaction-docker-buildx@v3
+      with:
+        buildx-version: latest
+        qemu-version: latest
+    - name: Buildx Docker
       run: |
         echo $HUB | docker login -u serverboi --password-stdin
-        docker build --tag serverboi/status-monitor:latest .
+        docker buildx build \
+          --push \
+          --platform linux/arm64/v8,linux/amd64 \
+          --tag serverboi/status-monitor:latest . 
         docker push serverboi/status-monitor:latest
       env:
-        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         HUB: ${{ secrets.HUB }}
