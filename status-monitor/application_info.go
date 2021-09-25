@@ -5,24 +5,17 @@ import (
 	"log"
 
 	"github.com/rumblefrog/go-a2s"
+
+	sq "serverquery"
 )
 
-type ApplicationInformation struct {
-	CurrentPlayers    int       `json:"Current-Players"`
-	MaxPlayers        int       `json:"Max-Players"`
-	Map               string    `json:"Map,omitempty"`
-	PasswordProtected bool      `json:"Password-Protected"`
-	VAC               bool      `json:"VAC,omitempty"`
-	Players           []*Player `json:"Player-Info,omitempty"`
-}
-
-func getApplicationInformation() *ApplicationInformation {
+func getApplicationInformation() *sq.ApplicationInformation {
 	switch config.QueryType {
 	case "a2s":
 		return a2sInfo()
 	default:
 		log.Printf("No query method specified.")
-		return &ApplicationInformation{}
+		return &sq.ApplicationInformation{}
 	}
 }
 
@@ -47,8 +40,8 @@ func a2sQuery() (info *a2s.ServerInfo, players *a2s.PlayerInfo, err error) {
 	}
 }
 
-func a2sInfo() *ApplicationInformation {
-	appInfo := &ApplicationInformation{}
+func a2sInfo() *sq.ApplicationInformation {
+	appInfo := &sq.ApplicationInformation{}
 	info, players, err := a2sQuery()
 	if err != nil {
 		log.Printf("Error getting info: %v", err)
@@ -64,9 +57,9 @@ func a2sInfo() *ApplicationInformation {
 			applicationUp = true
 		}
 		if players != nil {
-			var playerInfo []*Player
+			var playerInfo []*sq.Player
 			for _, player := range players.Players {
-				newPlayer := &Player{
+				newPlayer := &sq.Player{
 					Name:     player.Name,
 					Duration: player.Duration,
 				}

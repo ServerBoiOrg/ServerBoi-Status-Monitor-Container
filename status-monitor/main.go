@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	sq "serverquery"
 	"time"
 )
 
@@ -33,7 +34,7 @@ func continouslyUpdateStatus() {
 
 func updateServerInfo() {
 	log.Printf("Updating server information")
-	updatedInfo := ServerInfo{
+	updatedInfo := sq.ServerInfo{
 		General:           getGeneralInfo(),
 		AppInfo:           getApplicationInformation(),
 		ServiceInfo:       getServiceInfo(),

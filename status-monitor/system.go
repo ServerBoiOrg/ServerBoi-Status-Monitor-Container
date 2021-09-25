@@ -3,46 +3,16 @@ package main
 import (
 	"fmt"
 
+	sq "serverquery"
+
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
-type SystemInformation struct {
-	Uptime string             `json:"Uptime"`
-	CPU    []*CPUInformation  `json:"CPUs"`
-	Memory *MemoryInformation `json:"Memory"`
-	Disk   *DiskInformation   `json:"Disk"`
-}
-
-type MemoryInformation struct {
-	Total       uint64  `json:"Total"`
-	Available   uint64  `json:"Available"`
-	Used        uint64  `json:"Used"`
-	UsedPercent float64 `json:"Percent-Used"`
-	Free        uint64  `json:"Free"`
-}
-
-type DiskInformation struct {
-	Total       uint64  `json:"total"`
-	Free        uint64  `json:"Free"`
-	Used        uint64  `json:"Used"`
-	UsedPercent float64 `json:"Percent-Used"`
-}
-
-type CPUInformation struct {
-	CPU       int32   `json:"Cpu"`
-	Vendor    string  `json:"Vendor"`
-	Family    string  `json:"Family"`
-	Cores     int32   `json:"Core(s)"`
-	ModelName string  `json:"Model-Name"`
-	Mhz       float64 `json:"Mhz"`
-	CacheSize int32   `json:"Cache-Size"`
-}
-
-func getSystemInfo() *SystemInformation {
-	return &SystemInformation{
+func getSystemInfo() *sq.SystemInformation {
+	return &sq.SystemInformation{
 		Uptime: getUptime(),
 		CPU:    getCpuInfo(),
 		Disk:   getDiskInfo(),
@@ -58,11 +28,11 @@ func getUptime() string {
 	return fmt.Sprintf("%d days, %d hours, %d minutes", days, hours, minutes)
 }
 
-func getCpuInfo() []*CPUInformation {
-	var cpus []*CPUInformation
+func getCpuInfo() []*sq.CPUInformation {
+	var cpus []*sq.CPUInformation
 	c, _ := cpu.Info()
 	for _, e := range c {
-		entry := &CPUInformation{
+		entry := &sq.CPUInformation{
 			CPU:       e.CPU,
 			Vendor:    e.VendorID,
 			Family:    e.Family,
@@ -76,9 +46,9 @@ func getCpuInfo() []*CPUInformation {
 	return cpus
 }
 
-func getMemoryInfo() *MemoryInformation {
+func getMemoryInfo() *sq.MemoryInformation {
 	v, _ := mem.VirtualMemory()
-	return &MemoryInformation{
+	return &sq.MemoryInformation{
 		Total:       v.Total,
 		Available:   v.Available,
 		Used:        v.Used,
@@ -87,9 +57,9 @@ func getMemoryInfo() *MemoryInformation {
 	}
 }
 
-func getDiskInfo() *DiskInformation {
+func getDiskInfo() *sq.DiskInformation {
 	d, _ := disk.Usage("/")
-	return &DiskInformation{
+	return &sq.DiskInformation{
 		Total:       d.Total,
 		Free:        d.Free,
 		Used:        d.Used,

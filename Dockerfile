@@ -7,6 +7,8 @@ WORKDIR /status
 COPY status-monitor/go.mod ./
 COPY status-monitor/go.sum ./
 
+RUN git clone https://github.com/ServerBoiOrg/ServerBoi-Lambdas-Go ./ServerBoi-Lambdas-Go
+
 RUN go mod download
 
 COPY status-monitor/*.go ./
